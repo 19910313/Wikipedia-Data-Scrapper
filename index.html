@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AJAX WIKI</title>
+  </head>
+  <body>
+    <table class="languageTable">
+      <thead>
+        <tr>
+          <th>Languages</th>
+        </tr>
+      </thead>
+
+      <tbody></tbody>
+    </table>
+    <script>
+      const URL = "https://en.wikipedia.org/wiki/List_of_programming_languages";
+      //   using AJAX to communicate with wiki server in backgroung
+      function loadPage() {
+        // 1. prep the connection object
+        let xhr = new XMLHttpRequest();
+        // 2. setup
+        xhr.open("GET", URL);
+        // 2.a. callback
+        xhr.onload = () => {
+          let html = xhr.responseText; // string
+          let parser = new DOMParser();
+          let htmlDoc = parser.parseFromString(html, "text/html"); // DOM
+          //traverse the DOM structure
+          // & scrape
+          let languages = [];
+          let divs = htmlDoc.querySelectorAll(".div-col");
+          let div = divs[9];
+          let lis = div.firstElementChild.children;
+          for (let i = 0; i < lis.length; i++) {
+            languages.push(lis[i].firstElementChild.innerText);
+          }
+          console.log(languages);
+          // $.each(lis, function (index) {
+          //   lis += "<tr><td></td></tr>";
+          // });
+          // $(".languageTable tbody").html(lis);
+        };
+        //  3. send the request
+        xhr.send();
+      }
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  </body>
+</html>
